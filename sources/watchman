@@ -76,7 +76,7 @@ W_SET_ENV(){
   read -p "Enter returned message [$W_TEXT_RETURNED]: " INPUT_RETURNED_MESSAGE
   read -p "Enter alert message [$W_ALERT_MESSAGE]: " INPUT_ALERT_MESSAGE
   read -p "Enter macOS TTS voice [$W_TTS_VOICE]: " INPUT_TTS_VOICE
-  read -p "Enter notification sound filename [$W_TTS_VOICE]: " INPUT_ALERT_SOUND
+  read -p "Enter notification sound filename [$W_ALERT_SOUND]: " INPUT_ALERT_SOUND
   read -p "Enter you Line access token [$W_LINE_TOKEN]: " INPUT_LINE_TOKEN
   INPUT_STOLEN_MESSAGE=${INPUT_STOLEN_MESSAGE:-$W_TEXT_STOLEN}
   INPUT_RETURNED_MESSAGE=${INPUT_RETURNED_MESSAGE:-$W_TEXT_RETURNED}
@@ -123,7 +123,7 @@ W_RUN(){
     #Play sound
     if [[ "$W_STOLEN_STATUS" = true ]]; then
       osascript -e "set volume output volume 100"
-      if [[ "$W_ALERT_MESSAGE" = "" ]] && [[ -e $W_PATH"/"$W_ALERT_SOUND ]]; then afplay $W_PATH"/"$W_ALERT_SOUND; else say -v $W_TTS_VOICE $W_ALERT_MESSAGE; fi
+      if [[ "$W_ALERT_MESSAGE" = "" ]] && [[ -e $W_ALERT_SOUND ]]; then afplay $W_ALERT_SOUND; else say -v $W_TTS_VOICE $W_ALERT_MESSAGE; fi
     fi
     #Monitor power adapter
     if [[ ($(pmset -g ps | head -1) =~ "Battery Power") ]] && [[ "$W_STOLEN_STATUS" = false ]]; then
