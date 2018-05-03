@@ -28,13 +28,15 @@ W_ENV="watchman.env"
 W_PATH=$(dirname "$0")
 W_GET_VOLUME=$(osascript -e 'output volume of (get volume settings)')
 W_STOLEN_STATUS=false
+W_DEFAULT_TEXT_STOLEN="Your Macbook has been stolen"
+W_DEFAULT_TEXT_RETURNED="Your Macbook has been returned"
 . $W_PATH"/"$W_ENV
 
 W_SEND_MESSAGE(){
   if [[ "$W_STOLEN_STATUS" = true ]]; then
-    W_LINE_MESSAGE=$W_TEXT_STOLEN
+    W_LINE_MESSAGE=${W_TEXT_STOLEN:-$W_DEFAULT_TEXT_STOLEN}
   else
-    W_LINE_MESSAGE=$W_TEXT_RETURNED
+    W_LINE_MESSAGE=${W_TEXT_RETURNED:-$W_DEFAULT_TEXT_RETURNED}
   fi
   echo "STATUS : "$W_LINE_MESSAGE" ("$(date +"%F  %T")")"
   if [[ $W_LINE_TOKEN ]]; then
@@ -77,7 +79,7 @@ W_SET_ENV(){
   read -p "Enter alert message [$W_ALERT_MESSAGE]: " INPUT_ALERT_MESSAGE
   read -p "Enter macOS TTS voice [$W_TTS_VOICE]: " INPUT_TTS_VOICE
   read -p "Enter notification sound filename [$W_ALERT_SOUND]: " INPUT_ALERT_SOUND
-  read -p "Enter you Line access token [$W_LINE_TOKEN]: " INPUT_LINE_TOKEN
+  read -p "Enter you LINE access token [$W_LINE_TOKEN]: " INPUT_LINE_TOKEN
   INPUT_STOLEN_MESSAGE=${INPUT_STOLEN_MESSAGE:-$W_TEXT_STOLEN}
   INPUT_RETURNED_MESSAGE=${INPUT_RETURNED_MESSAGE:-$W_TEXT_RETURNED}
   INPUT_ALERT_MESSAGE=${INPUT_ALERT_MESSAGE:-$W_ALERT_MESSAGE}
