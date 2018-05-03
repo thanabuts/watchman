@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+W_APP_NAME="watchman"
+W_ENV="watchman.env"
+W_PATH=$(dirname "$0")
+W_GET_VOLUME=$(osascript -e 'output volume of (get volume settings)')
+W_STOLEN_STATUS=false
+. $W_PATH"/"$W_ENV
+
+W_SEND_MESSAGE(){
+  if [[ "$W_STOLEN_STATUS" = true ]]; then
+    W_LINE_MESSAGE=$W_TEXT_STOLEN
+  else
+    W_LINE_MESSAGE=$W_TEXT_RETURNED
+  fi
+  echo "STATUS : "$W_LINE_MESSAGE" ("$(date +"%F  %T")")"
+  if [[ $W_LINE_TOKEN ]]; then
+      #Send message to line notify and get response code
+      W_LINE_RESPONSE=$(CURL -X POST -H 'Authorization: Bearer '$W_LINE_TOKEN'' -F 'message='"$W_LINE_MESSAGE"'' https://notify-api.line.me/api/notify -s | W_GET_JSON status)
+      case "$W_LINE_RESPONSE" in
+         "200") echo "[LINE Notify] SUCCESS : The message has been sent"
+         ;;
+         "400") echo "[LINE Notify] ERROR : Unauthorized request"
+         ;;
+         "401") echo "[LINE Notify] ERROR : Invalid access token"
+         ;;
+         "500") echo "[LINE Notify]ERROR : Failure due to server error"
+         ;;
+         *)     echo "[LINE Notify] ERROR : Processed over time or stopped"
+         ;;
+      esac
+  fi
+}
+
+W_GET_JSON(){
+  #Thank you github.com/cjus for great function
+  KEY=$1
+  num=$2
+  awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/'$KEY'\042/){print $(i+1)}}}' | tr -d '"' | sed -n ${num}p
+}
+
+W_HELP () {
+    echo "Usage: $W_APP_NAME [-h] [-s]"
+    echo "Options:"
+    echo "-h, --help  : Display this help message"
+    echo "-s, --set   : Setting the necessary variables"
+    echo "-u, --uninstall   : Uninstall $W_APP_NAME"
+}
+
+W_SET_ENV(){
+  echo "Setting the necessary variables (Leave the answer blank if don't want to change it)"
+  read -p "Enter stolen message [$W_TEXT_STOLEN]: " INPUT_STOLEN_MESSAGE
+  read -p "Enter returned message [$W_TEXT_RETURNED]: " INPUT_RETURNED_MESSAGE
+  read -p "Enter alert message [$W_ALERT_MESSAGE]: " INPUT_ALERT_MESSAGE
+  read -p "Enter macOS TTS voice [$W_TTS_VOICE]: " INPUT_TTS_VOICE
+  read -p "Enter notification sound filename [$W_TTS_VOICE]: " INPUT_ALERT_SOUND
+  read -p "Enter you Line access token [$W_LINE_TOKEN]: " INPUT_LINE_TOKEN
+  INPUT_STOLEN_MESSAGE=${INPUT_STOLEN_MESSAGE:-$W_TEXT_STOLEN}
+  INPUT_RETURNED_MESSAGE=${INPUT_RETURNED_MESSAGE:-$W_TEXT_RETURNED}
+  INPUT_ALERT_MESSAGE=${INPUT_ALERT_MESSAGE:-$W_ALERT_MESSAGE}
+  INPUT_TTS_VOICE=${INPUT_TTS_VOICE:-$W_TTS_VOICE}
+  INPUT_ALERT_SOUND=${INPUT_ALERT_SOUND:-$W_ALERT_SOUND}
+  INPUT_LINE_TOKEN=${INPUT_LINE_TOKEN:-$W_LINE_TOKEN}
+  echo "export W_TEXT_STOLEN=\"${INPUT_STOLEN_MESSAGE//\"/\\\"}\"
+export W_TEXT_RETURNED=\"${INPUT_RETURNED_MESSAGE//\"/\\\"}\"
+export W_ALERT_MESSAGE=\"${INPUT_ALERT_MESSAGE//\"/\\\"}\"
+export W_TTS_VOICE=\"${INPUT_TTS_VOICE//\"/\\\"}\"
+export W_ALERT_SOUND=\"${INPUT_ALERT_SOUND//\"/\\\"}\"
+export W_LINE_TOKEN=\"${INPUT_LINE_TOKEN//\"/\\\"}\""> $W_PATH"/"$W_ENV
+  echo "You have set necessary variables success"
+  while true; do
+    read -p "Do you want to execute the $W_APP_NAME right now? [y/n]:" yn
+    case $yn in
+        [Yy]* ) $W_APP_NAME; break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yes or no";;
+    esac
+  done
+}
+
+W_RESET(){
+  sudo pmset -b disablesleep 0
+  osascript -e "set volume output volume "$W_GET_VOLUME
+    echo ""
+    echo $W_APP_NAME" has been stopped"
+}
+
+W_RUN(){
+  trap W_RESET EXIT
+  echo $W_APP_NAME" has been started"
+  #Checking AC adapter first
+  if [[ ($(pmset -g ps | head -1) =~ "Battery Power") ]]; then
+    echo "ERROR : Please connect the AC adapter and try again.."
+    exit
+  fi
+  #Enable sleep mode
+  sudo pmset -b disablesleep 1
+  pmset displaysleepnow
+  while [[ true ]]; do
+    #Play sound
+    if [[ "$W_STOLEN_STATUS" = true ]]; then
+      osascript -e "set volume output volume 100"
+      if [[ "$W_ALERT_MESSAGE" = "" ]] && [[ -e $W_PATH"/"$W_ALERT_SOUND ]]; then afplay $W_PATH"/"$W_ALERT_SOUND; else say -v $W_TTS_VOICE $W_ALERT_MESSAGE; fi
+    fi
+    #Monitor power adapter
+    if [[ ($(pmset -g ps | head -1) =~ "Battery Power") ]] && [[ "$W_STOLEN_STATUS" = false ]]; then
+       W_STOLEN_STATUS=true
+       W_SEND_MESSAGE
+    elif [[ ($(pmset -g ps | head -1) =~ "AC Power") ]] && [[ "$W_STOLEN_STATUS" = true ]]; then
+        W_STOLEN_STATUS=false
+        W_SEND_MESSAGE
+    fi
+  done
+}
+
+W_UNINSTALL(){
+  echo "[Uninstalling...] $W_APP_NAME - $1"
+  sudo rm -rf $W_PATH"/"$W_APP_NAME$2
+}
+
+for i in "$@"
+do
+    case $i in
+        --help|-h)
+            W_HELP
+            exit
+            ;;
+        --set|-s)
+            W_SET_ENV
+            exit
+            ;;
+        --uninstall|-u)
+            W_UNINSTALL environment .env
+            W_UNINSTALL sound  .aiff
+            W_UNINSTALL script
+            echo "Uninstall succeeded"
+            exit
+            ;;
+    esac
+done
+W_RUN
+exit
