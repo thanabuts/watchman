@@ -22,7 +22,7 @@ OR
 $ watchman --set
 ```
 
-To display this help message : `-h` or `--help`
+To display the help message : `-h` or `--help`
 ```
 $ watchman -h
 OR

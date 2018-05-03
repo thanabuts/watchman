@@ -65,7 +65,7 @@ W_GET_JSON(){
 W_HELP () {
     echo "Usage: $W_APP_NAME [-h] [-s]"
     echo "Options:"
-    echo "-h, --help  : Display this help message"
+    echo "-h, --help  : Display the help message"
     echo "-s, --set   : Setting the necessary variables"
     echo "-u, --uninstall   : Uninstall $W_APP_NAME"
 }
