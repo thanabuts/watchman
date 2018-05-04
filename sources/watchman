@@ -38,7 +38,7 @@ W_SEND_MESSAGE(){
   else
     W_LINE_MESSAGE=${W_TEXT_RETURNED:-$W_DEFAULT_TEXT_RETURNED}
   fi
-  echo "STATUS : "$W_LINE_MESSAGE" ("$(date +"%F  %T")")"
+  echo "STATUS : $W_LINE_MESSAGE ("$(date +"%F  %T")")"
   if [[ $W_LINE_TOKEN ]]; then
       #Send message to line notify and get response code
       W_LINE_RESPONSE=$(CURL -X POST -H 'Authorization: Bearer '$W_LINE_TOKEN'' -F 'message='"$W_LINE_MESSAGE"'' https://notify-api.line.me/api/notify -s | W_GET_JSON status)
@@ -65,15 +65,15 @@ W_GET_JSON(){
 }
 
 W_HELP () {
-    echo "Usage: $W_APP_NAME [-h] [-s]"
+    echo -e "\nUsage: $W_APP_NAME [-h] [-s]"
     echo "Options:"
     echo "-h, --help  : Display the help message"
     echo "-s, --set   : Setting the necessary variables"
-    echo "-u, --uninstall   : Uninstall $W_APP_NAME"
+    echo -e "-u, --uninstall   : Uninstall $W_APP_NAME\n"
 }
 
 W_SET_ENV(){
-  echo "Setting the necessary variables (Leave the answer blank if don't want to change it)"
+  echo -e "\nSetting the necessary variables\n\nLeave the answer blank if don't want to change it\n"
   read -p "Enter stolen message [$W_TEXT_STOLEN]: " INPUT_STOLEN_MESSAGE
   read -p "Enter returned message [$W_TEXT_RETURNED]: " INPUT_RETURNED_MESSAGE
   read -p "Enter alert message [$W_ALERT_MESSAGE]: " INPUT_ALERT_MESSAGE
@@ -92,13 +92,13 @@ export W_ALERT_MESSAGE=\"${INPUT_ALERT_MESSAGE//\"/\\\"}\"
 export W_TTS_VOICE=\"${INPUT_TTS_VOICE//\"/\\\"}\"
 export W_ALERT_SOUND=\"${INPUT_ALERT_SOUND//\"/\\\"}\"
 export W_LINE_TOKEN=\"${INPUT_LINE_TOKEN//\"/\\\"}\""> $W_PATH"/"$W_ENV
-  echo "You have set necessary variables success"
+  echo -e "\nYou have set necessary variables success\n"
   while true; do
     read -p "Do you want to execute the $W_APP_NAME right now? [y/n]:" yn
     case $yn in
         [Yy]* ) $W_APP_NAME; break;;
         [Nn]* ) exit;;
-        * ) echo "Please answer yes or no";;
+        * ) echo -e "Please answer yes or no\n";;
     esac
   done
 }
@@ -106,18 +106,17 @@ export W_LINE_TOKEN=\"${INPUT_LINE_TOKEN//\"/\\\"}\""> $W_PATH"/"$W_ENV
 W_RESET(){
   sudo pmset -b disablesleep 0
   osascript -e "set volume output volume "$W_GET_VOLUME
-    echo ""
-    echo $W_APP_NAME" has been stopped"
+    echo -e "\n$W_APP_NAME has been stopped ("$(date +"%F  %T")")"
 }
 
 W_RUN(){
-  trap W_RESET EXIT
-  echo $W_APP_NAME" has been started"
   #Checking AC adapter first
   if [[ ($(pmset -g ps | head -1) =~ "Battery Power") ]]; then
     echo "ERROR : Please connect the AC adapter and try again.."
     exit
   fi
+  trap W_RESET EXIT
+  echo "$W_APP_NAME has been started ("$(date +"%F  %T")")"
   #Enable sleep mode
   sudo pmset -b disablesleep 1
   pmset displaysleepnow
