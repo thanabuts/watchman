@@ -22,9 +22,9 @@ To **start** protecting
 $ watchman
 ```
 
-To **stop** protecting: `control`+`c`
+>To **stop** protecting: `control`+`c`
 
-To **define** the necessary variables : `-d` or `--define` [(More detail..)](https://github.com/thanabuts/watchman#definition-variables)
+To **define** the necessary variables : `-d` or `--define` [( more detail.. )](https://github.com/thanabuts/watchman#definition-variables)
 ```
 $ watchman -d
 OR
@@ -39,6 +39,47 @@ $ watchman --help
 ```
 
 ## Definition Variables
+After you run this command
+```
+$ watchman -d
+OR
+$ watchman --define
+```
+You will see the questions for define the necessary variables on Watchman then you can answer it.
+
+Leave the answer blank if you don't want to change it or enter "-" to answer none.
+
+**Description the questions**
+```
+Enter stolen message [Your value]:
+```
+###### Enter the message when you MacBook has been stolen (Require)
+---
+```
+Enter returned message [Your value]:
+```
+###### Enter the message when you MacBook has been returned (Require)
+---
+```
+Enter alert message [Your value]:
+```
+###### Enter the message that will speak instead of notification sound when your MacBook has been stolen (Option)
+---
+```
+Enter macOS TTS voice [Your value]:
+```
+###### If you define the message in previous question [alert message] you must answer it (Option)
+---
+```
+Enter notification sound file path [Your value]:
+```
+###### The sound file path (Option)
+###### [ Default = `/usr/local/bin/watchman.aiff` ]
+---
+```
+Enter you LINE access token [Your value]:
+```
+###### [LINE Notify](https://notify-bot.line.me/en/) token for send notification message (Option)
 
 ## Uninstallation
 To **uninstall** :  `-u` or `--uninstall`
