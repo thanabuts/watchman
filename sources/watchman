@@ -65,14 +65,14 @@ W_GET_JSON(){
 }
 
 W_HELP () {
-    echo -e "\nUsage: $W_APP_NAME [-h] [-s]"
+    echo -e "\nUsage: $W_APP_NAME [-h] [-d]"
     echo "Options:"
     echo "-h, --help  : Display the help message"
-    echo "-s, --set   : Setting the necessary variables"
+    echo "-d, --define   : Define the necessary variables"
     echo -e "-u, --uninstall   : Uninstall $W_APP_NAME\n"
 }
 
-W_SETTING_ANSWER(){
+W_DEFINITION_ANSWER(){
   if [[ "$1" = "-" ]]; then
     echo ""
   elif [[ "$1" = "" ]]; then
@@ -82,8 +82,8 @@ W_SETTING_ANSWER(){
   fi
 }
 
-W_SET_ENV(){
-  echo -e "\nSetting the necessary variables"
+W_DEFINITION_ENV(){
+  echo -e "\nDefinition the necessary variables"
   echo -e "-Leave the answer blank if you don't want to change it"
   echo -e "-Enter \"-\" to answer none\n"
   read -p "Enter stolen message [$W_TEXT_STOLEN]: " INPUT_STOLEN_MESSAGE
@@ -92,19 +92,19 @@ W_SET_ENV(){
   read -p "Enter macOS TTS voice [$W_TTS_VOICE]: " INPUT_TTS_VOICE
   read -p "Enter notification sound filename [$W_ALERT_SOUND]: " INPUT_ALERT_SOUND
   read -p "Enter you LINE access token [$W_LINE_TOKEN]: " INPUT_LINE_TOKEN
-  INPUT_STOLEN_MESSAGE=$(W_SETTING_ANSWER "$INPUT_STOLEN_MESSAGE" "$W_TEXT_STOLEN")
-  INPUT_RETURNED_MESSAGE=$(W_SETTING_ANSWER "$INPUT_RETURNED_MESSAGE" "$W_TEXT_RETURNED")
-  INPUT_ALERT_MESSAGE=$(W_SETTING_ANSWER "$INPUT_ALERT_MESSAGE" "$W_ALERT_MESSAGE")
-  INPUT_TTS_VOICE=$(W_SETTING_ANSWER "$INPUT_TTS_VOICE" "$W_TTS_VOICE")
-  INPUT_ALERT_SOUND=$(W_SETTING_ANSWER "$INPUT_ALERT_SOUND" "$W_ALERT_SOUND")
-  INPUT_LINE_TOKEN=$(W_SETTING_ANSWER "$INPUT_LINE_TOKEN" "$W_LINE_TOKEN")
+  INPUT_STOLEN_MESSAGE=$(W_DEFINITION_ANSWER "$INPUT_STOLEN_MESSAGE" "$W_TEXT_STOLEN")
+  INPUT_RETURNED_MESSAGE=$(W_DEFINITION_ANSWER "$INPUT_RETURNED_MESSAGE" "$W_TEXT_RETURNED")
+  INPUT_ALERT_MESSAGE=$(W_DEFINITION_ANSWER "$INPUT_ALERT_MESSAGE" "$W_ALERT_MESSAGE")
+  INPUT_TTS_VOICE=$(W_DEFINITION_ANSWER "$INPUT_TTS_VOICE" "$W_TTS_VOICE")
+  INPUT_ALERT_SOUND=$(W_DEFINITION_ANSWER "$INPUT_ALERT_SOUND" "$W_ALERT_SOUND")
+  INPUT_LINE_TOKEN=$(W_DEFINITION_ANSWER "$INPUT_LINE_TOKEN" "$W_LINE_TOKEN")
   echo "export W_TEXT_STOLEN=\"${INPUT_STOLEN_MESSAGE//\"/\\\"}\"
 export W_TEXT_RETURNED=\"${INPUT_RETURNED_MESSAGE//\"/\\\"}\"
 export W_ALERT_MESSAGE=\"${INPUT_ALERT_MESSAGE//\"/\\\"}\"
 export W_TTS_VOICE=\"${INPUT_TTS_VOICE//\"/\\\"}\"
 export W_ALERT_SOUND=\"${INPUT_ALERT_SOUND//\"/\\\"}\"
 export W_LINE_TOKEN=\"${INPUT_LINE_TOKEN//\"/\\\"}\""> $W_PATH"/"$W_ENV
-  echo -e "\nYou have set necessary variables success\n"
+  echo -e "\nYou have defined necessary variables success\n"
   while true; do
     read -p "Do you want to execute the $W_APP_NAME right now? [y/n]:" yn
     case $yn in
@@ -161,8 +161,8 @@ do
             W_HELP
             exit
             ;;
-        --set|-s)
-            W_SET_ENV
+        --define|-d)
+            W_DEFINITION_ENV
             exit
             ;;
         --uninstall|-u)
