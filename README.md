@@ -68,7 +68,9 @@ Enter alert message [Your value]:
 ```
 Enter macOS TTS voice [Your value]:
 ```
-###### If you define the message in previous question [alert message] you must answer it (Option)
+###### If you define the message in previous question [alert message] you must answer it (Option) [( more detail... )](https://github.com/thanabuts/watchman/blob/master/macOS-TTS-voice.txt)
+###### If you want to speak English message you should answer `Alex`
+###### If you want to speak Thai message you should answer `Kanya`
 ---
 ```
 Enter notification sound file path [Your value]:
