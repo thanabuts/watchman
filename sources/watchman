@@ -90,7 +90,7 @@ W_DEFINITION_ENV(){
   read -p "Enter returned message [$W_TEXT_RETURNED]: " INPUT_RETURNED_MESSAGE
   read -p "Enter alert message [$W_ALERT_MESSAGE]: " INPUT_ALERT_MESSAGE
   read -p "Enter macOS TTS voice [$W_TTS_VOICE]: " INPUT_TTS_VOICE
-  read -p "Enter notification sound filename [$W_ALERT_SOUND]: " INPUT_ALERT_SOUND
+  read -p "Enter notification sound file path [$W_ALERT_SOUND]: " INPUT_ALERT_SOUND
   read -p "Enter you LINE access token [$W_LINE_TOKEN]: " INPUT_LINE_TOKEN
   INPUT_STOLEN_MESSAGE=$(W_DEFINITION_ANSWER "$INPUT_STOLEN_MESSAGE" "$W_TEXT_STOLEN")
   INPUT_RETURNED_MESSAGE=$(W_DEFINITION_ANSWER "$INPUT_RETURNED_MESSAGE" "$W_TEXT_RETURNED")
