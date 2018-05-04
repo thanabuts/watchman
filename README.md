@@ -5,7 +5,8 @@ This is a simple shell script for macOS to protect your MacBook from theft befor
 Watchman protects your MacBook by detecting AC power connection.
 
 When your MacBook lost AC power connection, the Watchman will let you know that you have defined.
-If you want to get a message, The message will be sent by [LINE Notify](https://notify-bot.line.me/en/), So you have to register [LINE Notify](https://notify-bot.line.me/en/) and generate the token and then define the token in Watchman again.
+
+If you want to get a message, The message will be sent by LINE Notify, So you have to have LINE account and create [LINE Notify](https://notify-bot.line.me/en/) and generate the token and then define the token in Watchman again.
 
 If you define notification sound, please don't forget to unplug earphones from your MacBook for getting notification sound.
 
@@ -23,7 +24,7 @@ $ watchman
 
 To **stop** protecting: `control`+`c`
 
-To **define** the necessary variables : `-d` or `--define`
+To **define** the necessary variables : `-d` or `--define` [(More detail..)](https://github.com/thanabuts/watchman#definition-variables)
 ```
 $ watchman -d
 OR
@@ -36,6 +37,8 @@ $ watchman -h
 OR
 $ watchman --help
 ```
+
+## Definition Variables
 
 ## Uninstallation
 To **uninstall** :  `-u` or `--uninstall`
