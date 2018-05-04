@@ -72,20 +72,32 @@ W_HELP () {
     echo -e "-u, --uninstall   : Uninstall $W_APP_NAME\n"
 }
 
+W_SETTING_ANSWER(){
+  if [[ "$1" = "-" ]]; then
+    echo ""
+  elif [[ "$1" = "" ]]; then
+    echo "$2"
+  else
+    echo "$1"
+  fi
+}
+
 W_SET_ENV(){
-  echo -e "\nSetting the necessary variables\n\nLeave the answer blank if don't want to change it\n"
+  echo -e "\nSetting the necessary variables"
+  echo -e "-Leave the answer blank if you don't want to change it"
+  echo -e "-Enter \"-\" to answer none\n"
   read -p "Enter stolen message [$W_TEXT_STOLEN]: " INPUT_STOLEN_MESSAGE
   read -p "Enter returned message [$W_TEXT_RETURNED]: " INPUT_RETURNED_MESSAGE
   read -p "Enter alert message [$W_ALERT_MESSAGE]: " INPUT_ALERT_MESSAGE
   read -p "Enter macOS TTS voice [$W_TTS_VOICE]: " INPUT_TTS_VOICE
   read -p "Enter notification sound filename [$W_ALERT_SOUND]: " INPUT_ALERT_SOUND
   read -p "Enter you LINE access token [$W_LINE_TOKEN]: " INPUT_LINE_TOKEN
-  INPUT_STOLEN_MESSAGE=${INPUT_STOLEN_MESSAGE:-$W_TEXT_STOLEN}
-  INPUT_RETURNED_MESSAGE=${INPUT_RETURNED_MESSAGE:-$W_TEXT_RETURNED}
-  INPUT_ALERT_MESSAGE=${INPUT_ALERT_MESSAGE:-$W_ALERT_MESSAGE}
-  INPUT_TTS_VOICE=${INPUT_TTS_VOICE:-$W_TTS_VOICE}
-  INPUT_ALERT_SOUND=${INPUT_ALERT_SOUND:-$W_ALERT_SOUND}
-  INPUT_LINE_TOKEN=${INPUT_LINE_TOKEN:-$W_LINE_TOKEN}
+  INPUT_STOLEN_MESSAGE=$(W_SETTING_ANSWER "$INPUT_STOLEN_MESSAGE" "$W_TEXT_STOLEN")
+  INPUT_RETURNED_MESSAGE=$(W_SETTING_ANSWER "$INPUT_RETURNED_MESSAGE" "$W_TEXT_RETURNED")
+  INPUT_ALERT_MESSAGE=$(W_SETTING_ANSWER "$INPUT_ALERT_MESSAGE" "$W_ALERT_MESSAGE")
+  INPUT_TTS_VOICE=$(W_SETTING_ANSWER "$INPUT_TTS_VOICE" "$W_TTS_VOICE")
+  INPUT_ALERT_SOUND=$(W_SETTING_ANSWER "$INPUT_ALERT_SOUND" "$W_ALERT_SOUND")
+  INPUT_LINE_TOKEN=$(W_SETTING_ANSWER "$INPUT_LINE_TOKEN" "$W_LINE_TOKEN")
   echo "export W_TEXT_STOLEN=\"${INPUT_STOLEN_MESSAGE//\"/\\\"}\"
 export W_TEXT_RETURNED=\"${INPUT_RETURNED_MESSAGE//\"/\\\"}\"
 export W_ALERT_MESSAGE=\"${INPUT_ALERT_MESSAGE//\"/\\\"}\"
