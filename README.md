@@ -1,5 +1,8 @@
-# Watchman
+# Watchman [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/worapatk)
+
 This is a simple shell script for macOS to protect your MacBook from theft before you leave it from your sight.
+
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/P_qReNiMMJk/0.jpg)](http://www.youtube.com/watch?v=P_qReNiMMJk)
 
 ## How does it work?
 Watchman protects your MacBook by detecting AC power connection.
@@ -75,7 +78,7 @@ Enter macOS TTS voice [Your value]:
 ```
 Enter notification sound file path [Your value]:
 ```
-###### The sound file path (Option)
+###### The sound file path only .aiff (Option)
 ###### [ Default = `/usr/local/bin/watchman.aiff` ]
 ---
 ```
@@ -95,3 +98,9 @@ $ watchman --uninstal
 Copyright (c) 2018 WORAPAT KETENG
 
 Licensed under the [MIT License](https://github.com/thanabuts/watchman/blob/master/LICENSE.md)
+
+
+## Donation
+If you like my project, you can give me a cup of coffee :coffee:
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/worapatk)
